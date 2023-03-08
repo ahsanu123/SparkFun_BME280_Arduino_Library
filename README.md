@@ -1,3 +1,5 @@
+# edited by AH... for working with STM32F407, for personal use 
+
 SparkFun BME280 Arduino Library
 ========================================
 
