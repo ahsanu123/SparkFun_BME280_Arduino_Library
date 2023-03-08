@@ -30,14 +30,20 @@ TODO:
 #ifndef __BME280_H__
 #define __BME280_H__
 
-#if (ARDUINO >= 100)
-#include "Arduino.h"
-#else
-#include "WProgram.h"
-#endif
+/*
+ * Customize by AH... to working with STM32F4
+ * */
 
-#include <Wire.h>
-#include <SPI.h>
+#include "main.h"
+
+//#if (ARDUINO >= 100)
+//#include "Arduino.h"
+//#else
+//#include "WProgram.h"
+//#endif
+
+//#include <Wire.h>
+//#include <SPI.h>
 
 //Uncomment the following line to enable software I2C
 //You will need to have the SoftwareWire library installed
@@ -133,7 +139,7 @@ struct BME280_SensorSettings
     uint8_t commInterface;
     uint8_t I2CAddress;
     uint8_t chipSelectPin;
-	SPISettings spiSettings{BME280_SPI_CLOCK, MSBFIRST, BME280_SPI_MODE};
+//	SPISettings spiSettings{BME280_SPI_CLOCK, MSBFIRST, BME280_SPI_MODE};
 
 	//Deprecated settings
 	uint8_t runMode;
@@ -200,11 +206,11 @@ class BME280
 	//This also gets the SensorCalibration constants
     uint8_t begin( void );
     bool beginSPI(uint8_t csPin); //Communicate using SPI
-    bool beginI2C(TwoWire &wirePort = Wire); //Called when user provides Wire port
+//    bool beginI2C(TwoWire &wirePort = Wire); //Called when user provides Wire port
     
-	#ifdef SoftwareWire_h
-	bool beginI2C(SoftwareWire &wirePort); //Called when user provides a softwareWire port
-	#endif
+//	#ifdef SoftwareWire_h
+//	bool beginI2C(SoftwareWire &wirePort); //Called when user provides a softwareWire port
+//	#endif
 
 	uint8_t getMode(void); //Get the current mode: sleep, forced, or normal
 	void setMode(uint8_t mode); //Set the current mode
@@ -265,11 +271,11 @@ private:
 	void readTempFFromBurst(uint8_t buffer[], BME280_SensorMeasurements *measurements);
 
     uint8_t _wireType = HARD_WIRE; //Default to Wire.h
-    TwoWire *_hardPort = NO_WIRE; //The generic connection to user's chosen I2C hardware
+//    TwoWire *_hardPort = NO_WIRE; //The generic connection to user's chosen I2C hardware
     
-	#ifdef SoftwareWire_h
-	SoftwareWire *_softPort = NO_WIRE; //Or, the generic connection to software wire port
-	#endif
+//	#ifdef SoftwareWire_h
+//	SoftwareWire *_softPort = NO_WIRE; //Or, the generic connection to software wire port
+//	#endif
 	
 	float _referencePressure = 101325.0; //Default but is changeable
 };
