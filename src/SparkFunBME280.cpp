@@ -34,7 +34,7 @@ BME280::BME280( void )
 {
 	//Construct with these default settings
 
-	settings.commInterface = I2C_MODE; //Default to I2C
+	settings.commInterface = SPI_MODE; //Default to I2C
 
 	settings.I2CAddress = 0x77; //Default, jumper open is 0x77
 //	_hardPort = &Wire; //Default to Wire port
@@ -693,6 +693,14 @@ void BME280::readRegisterRegion(uint8_t *outputPointer , uint8_t offset, uint8_t
 
 	case SPI_MODE:
 
+		HAL_GPIO_WritePin(CS_BME280_GPIO_Port, CS_BME280_Pin, GPIO_PIN_RESET);
+
+		offset |= 0x80;
+		HAL_SPI_Transmit(&hspi1, &offset, 1, HAL_MAX_DELAY);
+		HAL_SPI_Receive(&hspi1, outputPointer, length, HAL_MAX_DELAY);
+
+		HAL_GPIO_WritePin(CS_BME280_GPIO_Port, CS_BME280_Pin, GPIO_PIN_SET);
+
 
 
 ////		SPI.beginTransaction(settings.spiSettings);
@@ -778,6 +786,7 @@ int16_t BME280::readRegisterInt16( uint8_t offset )
 
 void BME280::writeRegister(uint8_t offset, uint8_t dataToWrite)
 {
+	uint8_t buff[2] = {(offset&0x7F), dataToWrite};
 	switch (settings.commInterface)
 	{
 	case I2C_MODE:
@@ -804,7 +813,11 @@ void BME280::writeRegister(uint8_t offset, uint8_t dataToWrite)
 		
 	case SPI_MODE:
 
+		HAL_GPIO_WritePin(CS_BME280_GPIO_Port, CS_BME280_Pin, GPIO_PIN_RESET);
 
+		HAL_SPI_Transmit(&hspi1, buff, 2, HAL_MAX_DELAY);
+
+		HAL_GPIO_WritePin(CS_BME280_GPIO_Port, CS_BME280_Pin, GPIO_PIN_SET);
 
 ////		SPI.beginTransaction(settings.spiSettings);
 //		// take the chip select low to select the device:

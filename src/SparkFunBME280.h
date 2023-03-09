@@ -36,6 +36,9 @@ TODO:
 
 #include "main.h"
 
+
+extern SPI_HandleTypeDef hspi1;
+
 //#if (ARDUINO >= 100)
 //#include "Arduino.h"
 //#else
